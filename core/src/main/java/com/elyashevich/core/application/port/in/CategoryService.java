@@ -1,7 +1,6 @@
 package com.elyashevich.core.application.port.in;
 
 import com.elyashevich.core.domain.model.Category;
-import com.elyashevich.core.infrastructure.persistance.entity.CategoryMongoEntity;
 
 import java.util.List;
 

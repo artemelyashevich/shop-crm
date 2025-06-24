@@ -1,6 +1,6 @@
 package com.elyashevich.core.domain.exception;
 
-public class ValidationException extends RuntimeException{
+public class ValidationException extends RuntimeException {
     public ValidationException() {
     }
 

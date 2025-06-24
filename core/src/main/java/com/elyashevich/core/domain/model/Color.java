@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder
@@ -16,10 +14,10 @@ import java.util.List;
 public class Color {
 
     private String id;
-    
+
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 

@@ -1,6 +1,6 @@
 package com.elyashevich.core.domain.exception;
 
-public class BusinessException extends RuntimeException{
+public class BusinessException extends RuntimeException {
     public BusinessException() {
     }
 

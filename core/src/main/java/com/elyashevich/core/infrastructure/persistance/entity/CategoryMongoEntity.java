@@ -20,11 +20,11 @@ public class CategoryMongoEntity {
 
     @Id
     private String id;
-    
+
     @Field("created_at")
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Field("updated_at")
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();

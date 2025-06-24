@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Category {
     private String id;
-    
+
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
-    
+
     private String title;
 
     private String description;

@@ -16,10 +16,10 @@ import java.util.List;
 public class Product {
 
     private String id;
-    
+
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
@@ -28,7 +28,7 @@ public class Product {
     private String description;
 
     private Integer price;
-    
+
     @Builder.Default
     private List<String> images = new ArrayList<>();
 
