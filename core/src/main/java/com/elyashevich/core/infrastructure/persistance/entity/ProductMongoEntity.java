@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ProductMongoEntity {
     private String description;
 
     @Field
-    private Integer price;
+    private BigDecimal price;
 
     @Builder.Default
     private List<String> images = new ArrayList<>();

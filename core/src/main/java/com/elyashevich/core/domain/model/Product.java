@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class Product {
 
     private String description;
 
-    private Integer price;
+    private BigDecimal price;
 
     @Builder.Default
     private List<String> images = new ArrayList<>();
