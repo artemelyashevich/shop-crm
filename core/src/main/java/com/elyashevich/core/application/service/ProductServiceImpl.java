@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     public static final String PRODUCT_WITH_ID_NOT_FOUND_TEMPLATE = "Product with id '%s' not found";
 
     private final ProductRepository productRepository;
-    private final EntityMapper<Product, ProductMongoEntity>  productMapper;
+    private final EntityMapper<Product, ProductMongoEntity> productMapper;
 
     @Override
     public List<Product> findAll() {

@@ -49,7 +49,7 @@ public class ColorController {
     @ResponseStatus(HttpStatus.CREATED)
     public Color update(@PathVariable String id, @Valid @RequestBody ColorRequestDto dto) {
         Color color = colorMapper.toModel(dto);
-        return  colorService.update(id, color);
+        return colorService.update(id, color);
     }
 
     @DeleteMapping("/{id}")

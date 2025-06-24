@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.InjectMocks;
@@ -21,10 +20,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ColorRepositoryAdapterTest {
@@ -42,80 +47,80 @@ class ColorRepositoryAdapterTest {
     private static Stream<Arguments> provideColorsForFindByStoreId() {
         LocalDateTime now = LocalDateTime.now();
         return Stream.of(
-            Arguments.of(
-                "store-1",
-                List.of(
-                    createTestEntity("color-1", "Red", "#FF0000", "store-1", now.minusDays(1)),
-                    createTestEntity("color-2", "Blue", "#0000FF", "store-1", now.minusHours(1))
+                Arguments.of(
+                        "store-1",
+                        List.of(
+                                createTestEntity("color-1", "Red", "#FF0000", "store-1", now.minusDays(1)),
+                                createTestEntity("color-2", "Blue", "#0000FF", "store-1", now.minusHours(1))
+                        ),
+                        List.of(
+                                createTestColor("color-1", "Red", "#FF0000", "store-1", now.minusDays(1)),
+                                createTestColor("color-2", "Blue", "#0000FF", "store-1", now.minusHours(1))
+                        )
                 ),
-                List.of(
-                    createTestColor("color-1", "Red", "#FF0000", "store-1", now.minusDays(1)),
-                    createTestColor("color-2", "Blue", "#0000FF", "store-1", now.minusHours(1))
+                Arguments.of(
+                        "empty-store",
+                        Collections.emptyList(),
+                        Collections.emptyList()
                 )
-            ),
-            Arguments.of(
-                "empty-store",
-                Collections.emptyList(),
-                Collections.emptyList()
-            )
         );
     }
 
     private static Stream<Arguments> provideColorsForFindById() {
         LocalDateTime now = LocalDateTime.now();
         return Stream.of(
-            Arguments.of(
-                "existing-id",
-                Optional.of(createTestEntity("existing-id", "Green", "#00FF00", "store-1", now)),
-                Optional.of(createTestColor("existing-id", "Green", "#00FF00", "store-1", now))
-            ),
-            Arguments.of(
-                "non-existing-id",
-                Optional.empty(),
-                Optional.empty()
-            )
+                Arguments.of(
+                        "existing-id",
+                        Optional.of(createTestEntity("existing-id", "Green", "#00FF00", "store-1", now)),
+                        Optional.of(createTestColor("existing-id", "Green", "#00FF00", "store-1", now))
+                ),
+                Arguments.of(
+                        "non-existing-id",
+                        Optional.empty(),
+                        Optional.empty()
+                )
         );
     }
 
     private static Stream<Arguments> provideColorsForCreate() {
         LocalDateTime now = LocalDateTime.now();
         return Stream.of(
-            Arguments.of(
-                createTestColor(null, "New Color", "#FFFFFF", "store-1", null),
-                createTestEntity(null, "New Color", "#FFFFFF", "store-1", now),
-                createTestEntity("saved-id", "New Color", "#FFFFFF", "store-1", now),
-                createTestColor("saved-id", "New Color", "#FFFFFF", "store-1", now)
-            ),
-            Arguments.of(
-                createTestColor("existing-id", "Existing Color", "#000000", "store-1", now.minusDays(1)),
-                createTestEntity("existing-id", "Existing Color", "#000000", "store-1", now),
-                createTestEntity("existing-id", "Existing Color", "#000000", "store-1", now),
-                createTestColor("existing-id", "Existing Color", "#000000", "store-1", now)
-            )
+                Arguments.of(
+                        createTestColor(null, "New Color", "#FFFFFF", "store-1", null),
+                        createTestEntity(null, "New Color", "#FFFFFF", "store-1", now),
+                        createTestEntity("saved-id", "New Color", "#FFFFFF", "store-1", now),
+                        createTestColor("saved-id", "New Color", "#FFFFFF", "store-1", now)
+                ),
+                Arguments.of(
+                        createTestColor("existing-id", "Existing Color", "#000000", "store-1", now.minusDays(1)),
+                        createTestEntity("existing-id", "Existing Color", "#000000", "store-1", now),
+                        createTestEntity("existing-id", "Existing Color", "#000000", "store-1", now),
+                        createTestColor("existing-id", "Existing Color", "#000000", "store-1", now)
+                )
         );
     }
 
     private static Stream<Arguments> provideColorsForDelete() {
         LocalDateTime now = LocalDateTime.now();
         return Stream.of(
-            Arguments.of(createTestColor("color-1", "To Delete", "#111111", "store-1", now)),
-            Arguments.of(createTestColor("color-2", "Another Delete", "#222222", "store-2", now))
+                Arguments.of(createTestColor("color-1", "To Delete", "#111111", "store-1", now)),
+                Arguments.of(createTestColor("color-2", "Another Delete", "#222222", "store-2", now))
         );
     }
 
     private static Stream<Arguments> provideNameAndStoreIdForExists() {
         return Stream.of(
-            Arguments.of("Existing Name", "store-1", true),
-            Arguments.of("Non-existing Name", "store-1", false),
-            Arguments.of("Existing Name", "different-store", false)
+                Arguments.of("Existing Name", "store-1", true),
+                Arguments.of("Non-existing Name", "store-1", false),
+                Arguments.of("Existing Name", "different-store", false)
         );
     }
 
     private static Stream<Arguments> provideValueAndStoreIdForExists() {
         return Stream.of(
-            Arguments.of("#FF0000", "store-1", true),
-            Arguments.of("#00FF00", "store-1", false),
-            Arguments.of("#FF0000", "different-store", false)
+                Arguments.of("#FF0000", "store-1", true),
+                Arguments.of("#00FF00", "store-1", false),
+                Arguments.of("#FF0000", "different-store", false)
         );
     }
 
@@ -231,12 +236,12 @@ class ColorRepositoryAdapterTest {
 
         // Assert
         assertAll(
-            () -> assertEquals(expectedColor.getId(), result.getId()),
-            () -> assertEquals(expectedColor.getName(), result.getName()),
-            () -> assertEquals(expectedColor.getValue(), result.getValue()),
-            () -> assertEquals(expectedColor.getStoreId(), result.getStoreId()),
-            () -> assertNotNull(result.getCreatedAt()),
-            () -> assertNotNull(result.getUpdatedAt())
+                () -> assertEquals(expectedColor.getId(), result.getId()),
+                () -> assertEquals(expectedColor.getName(), result.getName()),
+                () -> assertEquals(expectedColor.getValue(), result.getValue()),
+                () -> assertEquals(expectedColor.getStoreId(), result.getStoreId()),
+                () -> assertNotNull(result.getCreatedAt()),
+                () -> assertNotNull(result.getUpdatedAt())
         );
         verify(entityMapper).toEntity(inputColor);
         verify(colorMongoRepository).save(entityToSave);
@@ -256,11 +261,11 @@ class ColorRepositoryAdapterTest {
     void delete_WithValidColor_DeletesEntity(Color color) {
         // Arrange
         ColorMongoEntity entity = createTestEntity(
-            color.getId(),
-            color.getName(),
-            color.getValue(),
-            color.getStoreId(),
-            color.getCreatedAt()
+                color.getId(),
+                color.getName(),
+                color.getValue(),
+                color.getStoreId(),
+                color.getCreatedAt()
         );
         when(entityMapper.toEntity(color)).thenReturn(entity);
 
@@ -281,7 +286,7 @@ class ColorRepositoryAdapterTest {
     ) {
         // Arrange
         when(colorMongoRepository.existsByNameAndStoreId(name, storeId))
-            .thenReturn(expectedResult);
+                .thenReturn(expectedResult);
 
         // Act
         boolean result = colorRepositoryAdapter.existsByNameAndStoreId(name, storeId);
@@ -300,7 +305,7 @@ class ColorRepositoryAdapterTest {
     ) {
         // Arrange
         when(colorMongoRepository.existsByValueAndStoreId(value, storeId))
-            .thenReturn(expectedResult);
+                .thenReturn(expectedResult);
 
         // Act
         boolean result = colorRepositoryAdapter.existsByValueAndStoreId(value, storeId);

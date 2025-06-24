@@ -39,7 +39,7 @@ public class CategoryController {
 
     @PostMapping("/{storeId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category createCategory(@PathVariable String storeId, @Valid  @RequestBody CategoryRequestDto dto) {
+    public Category createCategory(@PathVariable String storeId, @Valid @RequestBody CategoryRequestDto dto) {
         Category category = categoryMapper.toModel(dto);
         category.setStoreId(storeId);
         return categoryService.create(category);

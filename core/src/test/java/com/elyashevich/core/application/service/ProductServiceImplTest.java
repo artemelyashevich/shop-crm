@@ -19,8 +19,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
@@ -33,114 +40,114 @@ class ProductServiceImplTest {
 
     private static Stream<Arguments> provideProducts() {
         return Stream.of(
-            Arguments.of(
-                "Multiple products",
-                List.of(
-                    createTestProduct("1", "Product 1", "store-1", "category-1"),
-                    createTestProduct("2", "Product 2", "store-1", "category-2")
+                Arguments.of(
+                        "Multiple products",
+                        List.of(
+                                createTestProduct("1", "Product 1", "store-1", "category-1"),
+                                createTestProduct("2", "Product 2", "store-1", "category-2")
+                        ),
+                        2
                 ),
-                2
-            ),
-            Arguments.of(
-                "Empty list",
-                List.of(),
-                0
-            )
+                Arguments.of(
+                        "Empty list",
+                        List.of(),
+                        0
+                )
         );
     }
 
     private static Stream<Arguments> provideProductsByStore() {
         return Stream.of(
-            Arguments.of(
-                "Store with products",
-                "store-1",
-                List.of(
-                    createTestProduct("1", "Product 1", "store-1", "category-1"),
-                    createTestProduct("2", "Product 2", "store-1", "category-2")
+                Arguments.of(
+                        "Store with products",
+                        "store-1",
+                        List.of(
+                                createTestProduct("1", "Product 1", "store-1", "category-1"),
+                                createTestProduct("2", "Product 2", "store-1", "category-2")
+                        ),
+                        2
                 ),
-                2
-            ),
-            Arguments.of(
-                "Store without products",
-                "store-2",
-                List.of(),
-                0
-            )
+                Arguments.of(
+                        "Store without products",
+                        "store-2",
+                        List.of(),
+                        0
+                )
         );
     }
 
     private static Stream<Arguments> provideProductsByCategory() {
         return Stream.of(
-            Arguments.of(
-                "Category with products",
-                "category-1",
-                List.of(
-                    createTestProduct("1", "Product 1", "store-1", "category-1"),
-                    createTestProduct("3", "Product 3", "store-2", "category-1")
+                Arguments.of(
+                        "Category with products",
+                        "category-1",
+                        List.of(
+                                createTestProduct("1", "Product 1", "store-1", "category-1"),
+                                createTestProduct("3", "Product 3", "store-2", "category-1")
+                        ),
+                        2
                 ),
-                2
-            ),
-            Arguments.of(
-                "Category without products",
-                "category-3",
-                List.of(),
-                0
-            )
+                Arguments.of(
+                        "Category without products",
+                        "category-3",
+                        List.of(),
+                        0
+                )
         );
     }
 
     private static Stream<Arguments> provideProductFindByIdCases() {
         return Stream.of(
-            Arguments.of(
-                "Existing product",
-                Optional.of(createTestProduct("1", "Product 1", "store-1", "category-1")),
-                "1",
-                false
-            ),
-            Arguments.of(
-                "Non-existing product",
-                Optional.empty(),
-                "999",
-                true
-            )
+                Arguments.of(
+                        "Existing product",
+                        Optional.of(createTestProduct("1", "Product 1", "store-1", "category-1")),
+                        "1",
+                        false
+                ),
+                Arguments.of(
+                        "Non-existing product",
+                        Optional.empty(),
+                        "999",
+                        true
+                )
         );
     }
 
     private static Stream<Arguments> provideProductUpdateCases() {
         return Stream.of(
-            Arguments.of(
-                "Update all fields",
-                "1",
-                "Updated Product",
-                "New description",
-                2000,
-                List.of("image1.jpg", "image2.jpg"),
-                "category-2",
-                "color-2"
-            ),
-            Arguments.of(
-                "Partial update",
-                "2",
-                null,
-                "New description only",
-                null,
-                null,
-                null,
-                null
-            )
+                Arguments.of(
+                        "Update all fields",
+                        "1",
+                        "Updated Product",
+                        "New description",
+                        2000,
+                        List.of("image1.jpg", "image2.jpg"),
+                        "category-2",
+                        "color-2"
+                ),
+                Arguments.of(
+                        "Partial update",
+                        "2",
+                        null,
+                        "New description only",
+                        null,
+                        null,
+                        null,
+                        null
+                )
         );
     }
 
     private static Product createTestProduct(String id, String title, String storeId, String categoryId) {
         return Product.builder()
-            .id(id)
-            .title(title)
-            .storeId(storeId)
-            .categoryId(categoryId)
-            .price(BigDecimal.valueOf(1000))
-            .description("Test description")
-            .images(List.of("default.jpg"))
-            .build();
+                .id(id)
+                .title(title)
+                .storeId(storeId)
+                .categoryId(categoryId)
+                .price(BigDecimal.valueOf(1000))
+                .description("Test description")
+                .images(List.of("default.jpg"))
+                .build();
     }
 
     @ParameterizedTest(name = "{0}")
@@ -161,10 +168,10 @@ class ProductServiceImplTest {
     @MethodSource("provideProductsByStore")
     @DisplayName("findByStoreId should return products for store")
     void findByStoreId_ShouldReturnProductsForStore(
-        String description,
-        String storeId,
-        List<Product> expectedProducts,
-        int expectedSize
+            String description,
+            String storeId,
+            List<Product> expectedProducts,
+            int expectedSize
     ) {
         when(productRepository.findByStoreId(storeId)).thenReturn(expectedProducts);
 
@@ -180,10 +187,10 @@ class ProductServiceImplTest {
     @MethodSource("provideProductsByCategory")
     @DisplayName("findByCategoryId should return products for category")
     void findByCategoryId_ShouldReturnProductsForCategory(
-        String description,
-        String categoryId,
-        List<Product> expectedProducts,
-        int expectedSize
+            String description,
+            String categoryId,
+            List<Product> expectedProducts,
+            int expectedSize
     ) {
         when(productRepository.findByCategoryId(categoryId)).thenReturn(expectedProducts);
 
@@ -199,21 +206,21 @@ class ProductServiceImplTest {
     @MethodSource("provideProductFindByIdCases")
     @DisplayName("findById should handle cases correctly")
     void findById_ShouldHandleCases(
-        String description,
-        Optional<Product> mockResponse,
-        String inputId,
-        boolean shouldThrow
+            String description,
+            Optional<Product> mockResponse,
+            String inputId,
+            boolean shouldThrow
     ) {
         when(productRepository.findById(inputId)).thenReturn(mockResponse);
 
         if (shouldThrow) {
             ResourceNotFoundException exception = assertThrows(
-                ResourceNotFoundException.class,
-                () -> productService.findById(inputId)
+                    ResourceNotFoundException.class,
+                    () -> productService.findById(inputId)
             );
             assertEquals(
-                String.format(ProductServiceImpl.PRODUCT_WITH_ID_NOT_FOUND_TEMPLATE, inputId),
-                exception.getMessage()
+                    String.format(ProductServiceImpl.PRODUCT_WITH_ID_NOT_FOUND_TEMPLATE, inputId),
+                    exception.getMessage()
             );
         } else {
             Product result = productService.findById(inputId);
@@ -238,14 +245,14 @@ class ProductServiceImplTest {
 
     @ParameterizedTest
     @CsvSource({
-        "product-1",
-        "product-2",
-        "product-3"
+            "product-1",
+            "product-2",
+            "product-3"
     })
     @DisplayName("delete should invoke repository delete")
     void delete_ShouldCallRepository(String productId) {
         Product existing = createTestProduct(productId, "ToDelete", "store-1", "category-1");
-        
+
         when(productRepository.findById(productId)).thenReturn(Optional.of(existing));
         doNothing().when(productRepository).delete(existing);
 
@@ -260,13 +267,13 @@ class ProductServiceImplTest {
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         ResourceNotFoundException exception = assertThrows(
-            ResourceNotFoundException.class,
-            () -> productService.delete(productId)
+                ResourceNotFoundException.class,
+                () -> productService.delete(productId)
         );
 
         assertEquals(
-            String.format(ProductServiceImpl.PRODUCT_WITH_ID_NOT_FOUND_TEMPLATE, productId),
-            exception.getMessage()
+                String.format(ProductServiceImpl.PRODUCT_WITH_ID_NOT_FOUND_TEMPLATE, productId),
+                exception.getMessage()
         );
         verify(productRepository, never()).delete(any());
     }
