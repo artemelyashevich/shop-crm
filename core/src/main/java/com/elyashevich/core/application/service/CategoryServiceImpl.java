@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         updateCategoryFields(oldCategory, category);
 
-        Category updatedCategory = categoryRepository.create(category);
+        Category updatedCategory = categoryRepository.create(oldCategory);
 
         log.info("Updated category with id {}", updatedCategory);
         return category;

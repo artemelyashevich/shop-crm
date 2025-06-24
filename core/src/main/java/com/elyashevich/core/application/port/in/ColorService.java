@@ -2,9 +2,11 @@ package com.elyashevich.core.application.port.in;
 
 import com.elyashevich.core.domain.model.Color;
 
+import java.util.List;
+
 public interface ColorService {
 
-    Color findByStoreId(String storeId);
+    List<Color> findByStoreId(String storeId);
 
     Color findById(String id);
 
