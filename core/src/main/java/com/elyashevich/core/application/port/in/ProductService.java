@@ -1,22 +1,22 @@
 package com.elyashevich.core.application.port.in;
 
-import com.elyashevich.core.infrastructure.persistance.entity.ProductMongoEntity;
+import com.elyashevich.core.domain.model.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<ProductMongoEntity> findAll();
+    List<Product> findAll();
 
-    List<ProductMongoEntity> findByStoreId(String storeId);
+    List<Product> findByStoreId(String storeId);
 
-    List<ProductMongoEntity> findByCategoryId(String categoryId);
+    List<Product> findByCategoryId(String categoryId);
 
-    ProductMongoEntity findById(String id);
+    Product findById(String id);
 
-    ProductMongoEntity create(ProductMongoEntity product);
+    Product create(Product product);
 
-    ProductMongoEntity update(String productId, ProductMongoEntity product);
+    Product update(String productId, Product product);
 
     void delete(String productId);
 }

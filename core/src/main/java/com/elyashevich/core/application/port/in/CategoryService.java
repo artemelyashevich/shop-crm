@@ -1,18 +1,19 @@
 package com.elyashevich.core.application.port.in;
 
+import com.elyashevich.core.domain.model.Category;
 import com.elyashevich.core.infrastructure.persistance.entity.CategoryMongoEntity;
 
 import java.util.List;
 
 public interface CategoryService {
 
-    List<CategoryMongoEntity> findByStoreId(String storeId);
+    List<Category> findByStoreId(String storeId);
 
-    CategoryMongoEntity findById(String id);
+    Category findById(String id);
 
-    CategoryMongoEntity create(CategoryMongoEntity category);
+    Category create(Category category);
 
-    CategoryMongoEntity update(String id, CategoryMongoEntity category);
+    Category update(String id, Category category);
 
     void delete(String id);
 }

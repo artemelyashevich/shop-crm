@@ -1,16 +1,16 @@
 package com.elyashevich.core.application.port.in;
 
-import com.elyashevich.core.infrastructure.persistance.entity.ColorMongoEntity;
+import com.elyashevich.core.domain.model.Color;
 
 public interface ColorService {
 
-    ColorMongoEntity findByStoreId(String storeId);
+    Color findByStoreId(String storeId);
 
-    ColorMongoEntity findById(String id);
+    Color findById(String id);
 
-    ColorMongoEntity create(ColorMongoEntity color);
+    Color create(Color color);
 
-    ColorMongoEntity update(String id, ColorMongoEntity color);
+    Color update(String id, Color color);
 
     void delete(String id);
 }
