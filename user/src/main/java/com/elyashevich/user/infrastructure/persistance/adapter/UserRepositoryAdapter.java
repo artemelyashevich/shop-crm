@@ -35,4 +35,9 @@ public class UserRepositoryAdapter implements UserRepository {
         UserMongoEntity newUser = userMongoRepository.save(userMongoEntity);
         return userEntityMapper.toDomain(newUser);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userMongoRepository.existsByEmail(email);
+    }
 }
