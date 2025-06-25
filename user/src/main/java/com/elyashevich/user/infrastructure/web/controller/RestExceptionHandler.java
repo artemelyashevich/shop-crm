@@ -1,7 +1,7 @@
-package com.elyashevich.core.infrastructure.web.controller;
+package com.elyashevich.user.infrastructure.web.controller;
 
-import com.elyashevich.core.domain.exception.ResourceAlreadyExistsException;
-import com.elyashevich.core.domain.exception.ResourceNotFoundException;
+import com.elyashevich.user.domain.exception.ResourceAlreadyExistsException;
+import com.elyashevich.user.domain.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
